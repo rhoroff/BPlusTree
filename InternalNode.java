@@ -6,11 +6,11 @@ public class InternalNode extends BPlusTreeNode {
     public InternalNode(){
 
     }
-
+    @Override
     public void split() {
 
     }
-
+    @Override
     public void insert(int key, double value) {
 
     }

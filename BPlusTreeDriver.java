@@ -15,14 +15,16 @@ public class BPlusTreeDriver {
                     System.out.println(
                             "The input file does not start with an initialization command \n Please pass in a file that contains an initialization command as the first line ");
                 } else {
-                    Pattern intializerRegex = Pattern.compile("(?!Initialize\\()[0-9](?=)\\)");
-                    for (CharSequence  string : intializerRegex.split(initializerLine)) {
-                        System.out.println(string);
+                    Pattern intializerRegex = Pattern.compile("(?!Initialize\\()[0-9](?=\\))");
+                    Matcher m = intializerRegex.matcher(initializerLine);
+                    if(!m.find()){
+                        System.out.println("The first line of input.txt was not tree initialization. ");
+                    }else{
+                        int size = Integer.parseInt(m.group());
+                        BPlusTree tree = new BPlusTree();
+                        tree = tree.initialize(size);
+                        System.out.println("The degree of the initialzed tree is " + size);
                     }
-                    System.out.println(initializerLine.replaceAll(intializerRegex.pattern(), ""));
-                    // int size = Integer.parseInt(intializerRegex.split(initializerLine)[1]);
-                    // BPlusTree tree = new BPlusTree();
-                    // tree = tree.initialize(size);
                 }
                 while (bPlusTreeScanner.hasNext()) {
                     String line = bPlusTreeScanner.next();
