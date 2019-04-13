@@ -14,7 +14,10 @@ public class BPlusTreeContainer {
     }
 
     public void insert(int key, double value) {
-        this.root.insert(key, value);// Insert into the root and perfrom operations all the way down
+        this.root = this.root.insert(key, value);// Insert into the root and perform operations all the way down
+        //2 Cases
+            //Root is a leaf node, can be inserted directly into root and then taken care of
+            //Root is an internal node, check which interval the node belongs in 
     }
     
 }

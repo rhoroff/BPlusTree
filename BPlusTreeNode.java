@@ -10,9 +10,9 @@ abstract class BPlusTreeNode {
 
     public BPlusTreeNode Parent;
 
-    abstract public void split();
+    abstract public BPlusTreeNode split();
 
-    abstract public void insert(int key, double value);
+    abstract public BPlusTreeNode insert(int key, double value);
 
 
 }

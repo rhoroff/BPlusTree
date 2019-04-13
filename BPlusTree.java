@@ -46,6 +46,7 @@ public class bplustree {
                                 }
                             }
                         }
+                        System.out.println("Stop here for debugging to see what the tree looks like");
                     }
                 }
                 bPlusTreeScanner.close();

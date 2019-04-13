@@ -2,6 +2,16 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - bplustree",
+            "request": "launch",
+            "mainClass": "bplustree",
+            "projectName": "BPlusTree_3681d96f",
+            "args": "input.txt",
+            "vmArgs": "--enable-preview",
+
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - BPlusTreeDriver",
             "request": "launch",
             "mainClass": "BPlusTreeDriver",
