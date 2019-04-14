@@ -48,7 +48,7 @@ class LeafNode extends BPlusTreeNode {
             int splitIndex = this.Keys.size() / 2;
             parentNode.Keys.add(this.Keys.get(splitIndex));
             for (int i = 0; i < splitIndex; i++) {
-                newSibling.insert(this.Keys.get(i), this.Values.get(i));
+                newSibling.insert(this.Keys.get(0), this.Values.get(0));
                 this.Keys.remove(i);
                 this.Values.remove(i);
             }
@@ -59,6 +59,7 @@ class LeafNode extends BPlusTreeNode {
         }else{
             LeafNode newSibling = new LeafNode(MAXNODESIZE);
             int splitIndex = this.Keys.size() /2;
+            newSibling.Parent = this.Parent;
             this.Parent.Keys.add(this.Keys.get(splitIndex));
             for (int i = 0; i < splitIndex; i++) {
                 newSibling.insert(this.Keys.get(i), this.Values.get(i));

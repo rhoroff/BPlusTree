@@ -60,6 +60,7 @@ public class InternalNode extends BPlusTreeNode {
                 newParent.children.add(newSibling);
                 newParent.children.add(this);
                 this.parent = newParent;
+                newSibling.parent = this.parent;
                 return this.parent;
             }
 
