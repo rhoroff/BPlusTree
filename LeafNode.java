@@ -1,13 +1,10 @@
 import java.util.*;
 
 class LeafNode extends BPlusTreeNode {
-    boolean isLeaf = true;
-    public static int MAXNODESIZE;
-    public List<Integer> Keys = null;
     public List<Double> Values = null;
     public LeafNode leftSibling = null;
     public LeafNode rightSibling = null;
-    public boolean isOverfilled;
+    public InternalNode Parent = null;
 
     LeafNode(int m) {
         this.Keys = new ArrayList<Integer>();
@@ -19,7 +16,7 @@ class LeafNode extends BPlusTreeNode {
     public BPlusTreeNode insert(int key, double value) {
         this.Keys.add(key);// Adds key
         this.Values.add(value);// Adds value
-        if (Keys.size() > 2) {// If there is more than value, sort the values
+        if (Keys.size() >= 2) {// If there is more than value, sort the values
             for (int i = 0; i < Keys.size(); i++) {// Just a quick and dirty bubble sort
                 for (int j = 0; j < Keys.size() - i - 1; j++) {
                     if (Keys.get(j) > Keys.get(j + 1)) {
@@ -34,31 +31,65 @@ class LeafNode extends BPlusTreeNode {
                     }
                 }
             }
-        } 
-        if (Keys.size() >= MAXNODESIZE){
-            this.isOverfilled = true;
+        }
+        if (this.Keys.size() >= MAXNODESIZE) {
             return this.split();
 
-        }else{
+        } else {
             return this;
         }
     }
 
     @Override
     public BPlusTreeNode split() {
-        InternalNode parentNode = new InternalNode();
-        LeafNode newSibling = new LeafNode(MAXNODESIZE);
-        int splitIndex = this.Keys.size() / 2;
-        parentNode.Keys.add(this.Keys.get(splitIndex));
-        for(int i = 0; i < splitIndex;i++){
-            newSibling.insert(this.Keys.get(i), this.Values.get(i));
-            this.Keys.remove(i);
-            this.Values.remove(i);
+        if (this.Parent == null) {// Case of root insert
+            InternalNode parentNode = new InternalNode(this.MAXNODESIZE);
+            LeafNode newSibling = new LeafNode(MAXNODESIZE);
+            int splitIndex = this.Keys.size() / 2;
+            parentNode.Keys.add(this.Keys.get(splitIndex));
+            for (int i = 0; i < splitIndex; i++) {
+                newSibling.insert(this.Keys.get(i), this.Values.get(i));
+                this.Keys.remove(i);
+                this.Values.remove(i);
+            }
+            parentNode.children.add(newSibling);
+            parentNode.children.add(this);
+            newSibling.Parent = parentNode;
+            this.Parent = parentNode;
+        }else{
+            LeafNode newSibling = new LeafNode(MAXNODESIZE);
+            int splitIndex = this.Keys.size() /2;
+            this.Parent.Keys.add(this.Keys.get(splitIndex));
+            for (int i = 0; i < splitIndex; i++) {
+                newSibling.insert(this.Keys.get(i), this.Values.get(i));
+                this.Keys.remove(i);
+                this.Values.remove(i);
+            }
+            this.Parent.children.add(newSibling);
+            for (int i = 0; i < Keys.size(); i++) {// Just a quick and dirty bubble sort
+                for (int j = 0; j < Keys.size() - i - 1; j++) {
+                    if (this.Parent.Keys.get(j) > this.Parent.Keys.get(j + 1)) {
+                        // Sort the keys
+                        int keyTemp = this.Parent.Keys.get(j);
+                        this.Parent.Keys.set(j, this.Parent.Keys.get(j + 1));
+                        this.Parent.Keys.set(j + 1, keyTemp);
+                    }
+                }
+            }
+            if(this.Parent.children.size() > 1){
+                for (int i = 0; i < this.Parent.children.size(); i++) {// Just a quick and dirty bubble sort
+                    for (int j = 0; j < this.Parent.children.size() - i - 1; j++) {
+                        if ((this.Parent.children.get(j)).Keys.get(0) > (this.Parent.children.get(j+1)).Keys.get(0)) {
+                            // Sort the keys
+                            BPlusTreeNode childrenTemp = this.Parent.children.get(j);
+                            this.Parent.children.set(j, this.Parent.children.get(j + 1));
+                            this.Parent.children.set(j + 1, childrenTemp);
+                        }
+                    }
+                }
+            }
+
         }
-        parentNode.children.add(newSibling);
-        parentNode.children.add(this);
-        return parentNode;
-
+        return this.Parent;
     }
-
 }

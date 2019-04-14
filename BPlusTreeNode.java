@@ -1,15 +1,11 @@
 import java.util.*;
 
-abstract class BPlusTreeNode {
+abstract class BPlusTreeNode{
 
-    public boolean isLeaf;
+    ArrayList<Integer> Keys = null;
 
-    public List<Integer> Keys;
-
-    public static int MAXNODESIZE;
-
-    public BPlusTreeNode Parent;
-
+    static int MAXNODESIZE;
+    
     abstract public BPlusTreeNode split();
 
     abstract public BPlusTreeNode insert(int key, double value);
