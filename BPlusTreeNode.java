@@ -2,6 +2,8 @@ import java.util.*;
 
 abstract class BPlusTreeNode{
 
+    InternalNode Parent = null;
+
     ArrayList<Integer> Keys = null;
 
     static int MAXNODESIZE;

@@ -4,7 +4,6 @@ class LeafNode extends BPlusTreeNode {
     public List<Double> Values = null;
     public LeafNode leftSibling = null;
     public LeafNode rightSibling = null;
-    public InternalNode Parent = null;
 
     LeafNode(int m) {
         this.Keys = new ArrayList<Integer>();
@@ -46,6 +45,9 @@ class LeafNode extends BPlusTreeNode {
             InternalNode parentNode = new InternalNode(this.MAXNODESIZE);
             LeafNode newSibling = new LeafNode(MAXNODESIZE);
             int splitIndex = this.Keys.size() / 2;
+            if(this.Keys.size() > 2 && this.Keys.size() % 2 == 0){
+                splitIndex = (this.Keys.size() / 2) - 2;
+            }
             parentNode.Keys.add(this.Keys.get(splitIndex));
             for (int i = 0; i < splitIndex; i++) {
                 newSibling.insert(this.Keys.get(0), this.Values.get(0));
@@ -58,7 +60,10 @@ class LeafNode extends BPlusTreeNode {
             this.Parent = parentNode;
         }else{
             LeafNode newSibling = new LeafNode(MAXNODESIZE);
-            int splitIndex = this.Keys.size() /2;
+            int splitIndex = this.Keys.size() / 2;
+            if(this.Keys.size() > 2 && this.Keys.size() % 2 == 0){
+                splitIndex = (this.Keys.size() / 2) - 2;
+            }
             newSibling.Parent = this.Parent;
             this.Parent.Keys.add(this.Keys.get(splitIndex));
             for (int i = 0; i < splitIndex; i++) {
@@ -67,8 +72,8 @@ class LeafNode extends BPlusTreeNode {
                 this.Values.remove(i);
             }
             this.Parent.children.add(newSibling);
-            for (int i = 0; i < Keys.size(); i++) {// Just a quick and dirty bubble sort
-                for (int j = 0; j < Keys.size() - i - 1; j++) {
+            for (int i = 0; i < this.Parent.Keys.size(); i++) {// Just a quick and dirty bubble sort
+                for (int j = 0; j < this.Parent.Keys.size() - i - 1; j++) {
                     if (this.Parent.Keys.get(j) > this.Parent.Keys.get(j + 1)) {
                         // Sort the keys
                         int keyTemp = this.Parent.Keys.get(j);
