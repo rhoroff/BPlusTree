@@ -14,7 +14,7 @@ public class bplustree {
                 if (!initializerLine.contains("Initialize") && !initializerLine.contains("initialize")) {
                     System.out.println(
                             "The input file does not start with an initialization command \n Please pass in a file that contains an initialization command as the first line ");
-                            bPlusTreeScanner.close();
+                    bPlusTreeScanner.close();
                     return;
                 } else {
                     Pattern intializerRegex = Pattern.compile("(?!Initialize\\()[0-9](?=\\))");
@@ -25,7 +25,6 @@ public class bplustree {
                         int size = Integer.parseInt(m.group());
                         BPlusTreeContainer tree = new BPlusTreeContainer();
                         tree = tree.initialize(size);
-                        System.out.println("The degree of the initialzed tree is " + size);
                         while (bPlusTreeScanner.hasNextLine()) {
                             String line = bPlusTreeScanner.nextLine();
                             if (line.contains("Insert")) {
@@ -44,9 +43,29 @@ public class bplustree {
                                         tree.insert(key, value);
                                     }
                                 }
+                            } else if (line.contains("Search")) {
+                                Pattern searchRegex = Pattern.compile("(?!Search\\()[0-9]*(?=\\))");
+                                Matcher searchMatcher = searchRegex.matcher(line);
+                                if (!searchMatcher.find()) {
+                                    System.out.println("Malformed search command");
+                                } else {
+                                    String argument = searchMatcher.group();
+                                    int searchKey = Integer.parseInt(argument);
+                                    tree.search(searchKey);
+                                }
+                            } else if (line.contains("Delete")) {
+                                Pattern deleteRegex = Pattern.compile("(?!Delete\\()[0-9]*(?=\\))");
+                                Matcher deleteMatcher = deleteRegex.matcher(line);
+                                if (!deleteMatcher.find()) {
+                                    System.out.println("Malformed delete command");
+                                } else {
+                                    String argument = deleteMatcher.group(0);
+                                    int deleteKey = Integer.parseInt(argument);
+                                    tree.delete(deleteKey);
+                                }
                             }
                         }
-                        System.out.println("Stop here for debugging to see what the tree looks like");
+                        
                     }
                 }
                 bPlusTreeScanner.close();
